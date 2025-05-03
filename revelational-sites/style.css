@@ -3,9 +3,396 @@ Theme Name: Revelational Sites
 Theme URI: https://revelation.africa/revelationalsites
 Author: Revelation Nyirongo
 Author URI: https://revelation.africa
-Description: A mobile-first WordPress theme with an innovative header for news, email, social, and donations.
+Description: A mobile-first WordPress theme with an innovative header for news, email, social, and donations, specially designed for Catholic-centered websites.
 Version: 1.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: revelational-sites
 */
+
+/**
+ * Custom styles for Revelational Sites WordPress Theme
+ * Note: Most styles are handled by Tailwind CSS
+ */
+
+/* News ticker marquee animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+}
+
+/* Fix for WordPress admin bar */
+.admin-bar .fixed {
+  top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+  .admin-bar .fixed {
+    top: 46px;
+  }
+}
+
+/* Fix for Gutenberg editor */
+.wp-block {
+  max-width: 1200px;
+}
+
+/* Typography enhancements */
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  color: #1e40af; /* Tailwind blue-800 */
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.prose p {
+  margin-bottom: 1.25em;
+}
+
+.prose a {
+  color: #2563eb; /* Tailwind blue-600 */
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.prose a:hover {
+  color: #1d4ed8; /* Tailwind blue-700 */
+  text-decoration: underline;
+}
+
+.prose ul, .prose ol {
+  margin-bottom: 1.25em;
+  padding-left: 1.5em;
+}
+
+.prose blockquote {
+  border-left: 4px solid #3b82f6; /* Tailwind blue-500 */
+  padding-left: 1rem;
+  font-style: italic;
+  color: #4b5563; /* Tailwind gray-600 */
+}
+
+/* Remove default outline on focus for accessibility */
+a:focus, button:focus, input:focus, textarea:focus, select:focus {
+  outline: 2px solid #3b82f6; /* Tailwind blue-500 */
+  outline-offset: 2px;
+}
+
+/* WordPress alignments */
+.alignleft {
+  float: left;
+  margin-right: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+.alignright {
+  float: right;
+  margin-left: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+.aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wp-caption {
+  margin-bottom: 1.5em;
+  max-width: 100%;
+}
+
+.wp-caption img {
+  display: block;
+  margin: 0 auto;
+}
+
+.wp-caption-text {
+  text-align: center;
+  margin-top: 0.5em;
+  color: #6b7280; /* Tailwind gray-500 */
+  font-size: 0.875rem;
+}
+
+/* Pagination */
+.pagination .nav-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagination .page-numbers {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.375rem;
+  color: #374151; /* Tailwind gray-700 */
+  background-color: #f9fafb; /* Tailwind gray-50 */
+  transition: all 0.3s ease;
+}
+
+.pagination .page-numbers:hover {
+  background-color: #e5e7eb; /* Tailwind gray-200 */
+}
+
+.pagination .page-numbers.current {
+  background-color: #2563eb; /* Tailwind blue-600 */
+  color: #ffffff;
+}
+
+.pagination .prev, .pagination .next {
+  padding: 0 0.75rem;
+  width: auto;
+}
+
+/* Form elements */
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.625rem;
+  border: 1px solid #d1d5db; /* Tailwind gray-300 */
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+  color: #1f2937; /* Tailwind gray-800 */
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #3b82f6; /* Tailwind blue-500 */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #2563eb; /* Tailwind blue-600 */
+  color: #ffffff;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover,
+input[type="submit"]:hover {
+  background-color: #1d4ed8; /* Tailwind blue-700 */
+}
+
+/* Comments */
+.comment-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comment {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f9fafb; /* Tailwind gray-50 */
+  border-radius: 0.5rem;
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.comment-author .avatar {
+  margin-right: 0.75rem;
+  border-radius: 50%;
+}
+
+.comment-metadata {
+  font-size: 0.875rem;
+  color: #6b7280; /* Tailwind gray-500 */
+  margin-bottom: 0.75rem;
+}
+
+.comment-content {
+  margin-bottom: 0.5rem;
+}
+
+.comment-reply-link {
+  font-size: 0.875rem;
+  color: #2563eb; /* Tailwind blue-600 */
+  font-weight: 600;
+}
+
+.comment-form-comment label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Widgets */
+.widget {
+  margin-bottom: 2rem;
+}
+
+.widget-title {
+  margin-bottom: 1rem;
+  color: #1e40af; /* Tailwind blue-800 */
+}
+
+.widget ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.widget li {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb; /* Tailwind gray-200 */
+}
+
+.widget li:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Responsive YouTube embeds */
+.wp-block-embed__wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.wp-block-embed__wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Footer widgets */
+.footer-widget {
+  margin-bottom: 1.5rem;
+}
+
+.footer-widget .widget-title {
+  color: #f9fafb; /* Tailwind gray-50 */
+  border-bottom: 1px solid #4b5563; /* Tailwind gray-600 */
+  padding-bottom: 0.5rem;
+}
+
+.footer-widget ul li {
+  border-bottom: 1px solid #374151; /* Tailwind gray-700 */
+}
+
+.footer-widget ul li:last-child {
+  border-bottom: none;
+}
+
+/* Event archive customizations */
+.events-timeline .event-date {
+  transition: all 0.3s ease;
+}
+
+.events-timeline .event-item:hover .event-date {
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Custom animations */
+.hover-rise {
+  transition: transform 0.3s ease;
+}
+
+.hover-rise:hover {
+  transform: translateY(-5px);
+}
+
+/* Add subtle hover effect to cards */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive image galleries */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.gallery-item {
+  margin: 0;
+}
+
+.gallery-icon {
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.gallery-caption {
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Mobile menu animation */
+.mobile-menu-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mobile-menu-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.mobile-menu-exit {
+  opacity: 1;
+}
+
+.mobile-menu-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
