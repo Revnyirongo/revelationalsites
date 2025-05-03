@@ -10,11 +10,12 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: revelational-sites
 */
 
-/**
- * Custom styles for Revelational Sites WordPress Theme
- * Note: Most styles are handled by Tailwind CSS
- */
+/* 
+* Custom styles for Revelational Sites WordPress Theme
+* These styles complement and extend Tailwind CSS
+*/
 
+/* ---------- Animations ---------- */
 /* News ticker marquee animation */
 @keyframes marquee {
   0% {
@@ -30,6 +31,47 @@ Text Domain: revelational-sites
   animation: marquee 20s linear infinite;
 }
 
+/* Hover animations */
+.hover-rise {
+  transition: transform 0.3s ease;
+}
+
+.hover-rise:hover {
+  transform: translateY(-5px);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile menu animation */
+.mobile-menu-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mobile-menu-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.mobile-menu-exit {
+  opacity: 1;
+}
+
+.mobile-menu-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+/* ---------- Layout & Structure ---------- */
 /* Fix for WordPress admin bar */
 .admin-bar .fixed {
   top: 32px;
@@ -46,7 +88,7 @@ Text Domain: revelational-sites
   max-width: 1200px;
 }
 
-/* Typography enhancements */
+/* ---------- Typography ---------- */
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
   color: #1e40af; /* Tailwind blue-800 */
   margin-top: 1.5em;
@@ -86,6 +128,7 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus {
   outline-offset: 2px;
 }
 
+/* ---------- WordPress Core Classes ---------- */
 /* WordPress alignments */
 .alignleft {
   float: left;
@@ -156,6 +199,7 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus {
   width: auto;
 }
 
+/* ---------- Forms & Interactive Elements ---------- */
 /* Form elements */
 input[type="text"],
 input[type="email"],
@@ -212,7 +256,7 @@ input[type="submit"]:hover {
   background-color: #1d4ed8; /* Tailwind blue-700 */
 }
 
-/* Comments */
+/* ---------- Comments ---------- */
 .comment-list {
   margin: 0;
   padding: 0;
@@ -259,7 +303,7 @@ input[type="submit"]:hover {
   font-weight: 600;
 }
 
-/* Widgets */
+/* ---------- Widgets ---------- */
 .widget {
   margin-bottom: 2rem;
 }
@@ -287,23 +331,6 @@ input[type="submit"]:hover {
   border-bottom: none;
 }
 
-/* Responsive YouTube embeds */
-.wp-block-embed__wrapper {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
-  height: 0;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-}
-
-.wp-block-embed__wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
 /* Footer widgets */
 .footer-widget {
   margin-bottom: 1.5rem;
@@ -323,33 +350,22 @@ input[type="submit"]:hover {
   border-bottom: none;
 }
 
-/* Event archive customizations */
-.events-timeline .event-date {
-  transition: all 0.3s ease;
+/* ---------- Component Specific Styles ---------- */
+/* Responsive YouTube embeds */
+.wp-block-embed__wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
-.events-timeline .event-item:hover .event-date {
-  transform: scale(1.05);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Custom animations */
-.hover-rise {
-  transition: transform 0.3s ease;
-}
-
-.hover-rise:hover {
-  transform: translateY(-5px);
-}
-
-/* Add subtle hover effect to cards */
-.card-hover {
-  transition: all 0.3s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.wp-block-embed__wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Responsive image galleries */
@@ -375,24 +391,136 @@ input[type="submit"]:hover {
   margin-top: 0.5rem;
 }
 
-/* Mobile menu animation */
-.mobile-menu-enter {
-  opacity: 0;
-  transform: translateY(-10px);
+/* Event timeline customizations */
+.events-timeline .event-date {
+  transition: all 0.3s ease;
 }
 
-.mobile-menu-enter-active {
+.events-timeline .event-item:hover .event-date {
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Bishop card styling */
+.bishop-card img {
+  transition: transform 0.5s ease;
+}
+
+.bishop-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Back to top button */
+#back-to-top {
+  transition: all 0.3s ease;
+  z-index: 50;
+}
+
+/* Newsletter form */
+.newsletter-signup form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .newsletter-signup form {
+    flex-direction: row;
+  }
+}
+
+/* Primary menu enhancements */
+#primary-menu ul {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  #primary-menu ul {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+/* Mobile menu toggle button fix */
+#mobile-menu-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Facebook feed container */
+.fb-page, .fb-page iframe, .fb-page span {
+  width: 100% !important;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Daily readings section */
+.daily-readings blockquote {
+  font-style: italic;
+  color: #6b7280;
+  border-left: 4px solid #ef4444;
+  padding-left: 1rem;
+}
+
+/* Search form styling */
+.search-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.search-form .search-field {
+  flex-grow: 1;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.search-form .search-submit {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-form .search-submit:hover {
+  background-color: #1d4ed8;
+}
+
+/* Homepage hero slider enhanced */
+.hero-slider .swiper-button-next,
+.hero-slider .swiper-button-prev {
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.hero-slider .swiper-button-next:hover,
+.hero-slider .swiper-button-prev:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.hero-slider .swiper-button-next:after,
+.hero-slider .swiper-button-prev:after {
+  font-size: 1.5rem;
+}
+
+.hero-slider .swiper-pagination-bullet {
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0.7;
+  background-color: #ffffff;
+}
+
+.hero-slider .swiper-pagination-bullet-active {
+  background-color: #2563eb;
   opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.3s, transform 0.3s;
-}
-
-.mobile-menu-exit {
-  opacity: 1;
-}
-
-.mobile-menu-exit-active {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s, transform 0.3s;
 }

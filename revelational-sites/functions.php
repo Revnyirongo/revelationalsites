@@ -1,28 +1,11 @@
 <?php
-function revelational_enqueue_scripts() {
-    // Enqueue Tailwind CSS
-    wp_enqueue_style('tailwind', 'https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css');
-    
-    // Enqueue Swiper.js for sliders
-    wp_enqueue_style('swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
-    wp_enqueue_script('swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', array(), '11.0.0', true);
-    
-    // Enqueue Alpine.js for animations
-    wp_enqueue_script('alpine-js', 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js', array(), '3.0.0', true);
-    
-    // AOS (Animate On Scroll) library
-    wp_enqueue_style('aos-css', 'https://unpkg.com/aos@2.3.1/dist/aos.css');
-    wp_enqueue_script('aos-js', 'https://unpkg.com/aos@2.3.1/dist/aos.js', array(), '2.3.1', true);
-    
-    // Theme's main stylesheet
-    wp_enqueue_style('style', get_stylesheet_uri());
-    
-    // Theme's main JavaScript file
-    wp_enqueue_script('revelational-js', get_template_directory_uri() . '/js/main.js', array('jquery', 'swiper-js', 'alpine-js', 'aos-js'), '1.0.0', true);
-}
-add_action('wp_enqueue_scripts', 'revelational_enqueue_scripts');
+/**
+ * Revelational Sites Theme Functions
+ * 
+ * Enhanced version with proper script/style enqueuing and initialization
+ */
 
-// Theme setup
+// Theme Setup
 function revelational_setup() {
     // Register navigation menus
     register_nav_menus(array(
@@ -48,6 +31,67 @@ function revelational_setup() {
     add_image_size('news-thumbnail', 400, 300, true);
 }
 add_action('after_setup_theme', 'revelational_setup');
+
+/**
+ * Enqueue scripts and styles with proper dependencies
+ */
+function revelational_enqueue_scripts() {
+    // Enqueue Tailwind CSS - Ensure this loads first
+    wp_enqueue_style('tailwind', 'https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css', array(), '3.4.1');
+    
+    // Enqueue theme's main stylesheet
+    wp_enqueue_style('revelational-style', get_stylesheet_uri(), array('tailwind'), wp_get_theme()->get('Version'));
+    
+    // Enqueue AOS (Animate On Scroll) library
+    wp_enqueue_style('aos-css', 'https://unpkg.com/aos@2.3.1/dist/aos.css', array(), '2.3.1');
+    wp_enqueue_script('aos-js', 'https://unpkg.com/aos@2.3.1/dist/aos.js', array(), '2.3.1', true);
+    
+    // Enqueue Swiper.js for sliders
+    wp_enqueue_style('swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', array(), '11.0.0');
+    wp_enqueue_script('swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', array(), '11.0.0', true);
+    
+    // Enqueue jQuery (WordPress includes it by default)
+    wp_enqueue_script('jquery');
+    
+    // Enqueue Alpine.js for component interactions
+    wp_enqueue_script('alpine-js', 'https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js', array(), '3.13.3', true);
+    
+    // Enqueue Facebook SDK - Only if the Facebook container exists
+    wp_enqueue_script('facebook-sdk', 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0', array(), null, true);
+    
+    // Enqueue theme's main JavaScript file
+    wp_enqueue_script('revelational-js', get_template_directory_uri() . '/js/main.js', array('jquery', 'swiper-js', 'aos-js', 'alpine-js'), '1.0.0', true);
+    
+    // Add a small inline script to refresh Facebook widgets when page is fully loaded
+    wp_add_inline_script('revelational-js', '
+        jQuery(window).on("load", function() {
+            if (typeof FB !== "undefined") {
+                FB.XFBML.parse();
+            }
+        });
+    ');
+}
+add_action('wp_enqueue_scripts', 'revelational_enqueue_scripts');
+
+/**
+ * Initialize AOS (Animate On Scroll) library
+ */
+function revelational_initialize_aos() {
+    ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true,
+                mirror: false,
+                disable: 'mobile' // Disable on mobile for better performance
+            });
+        });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'revelational_initialize_aos', 100);
 
 // Register Bishop Custom Post Type
 function revelational_register_bishop_cpt() {
@@ -272,25 +316,10 @@ function revelational_widgets_init() {
 }
 add_action('widgets_init', 'revelational_widgets_init');
 
-// Initialize AOS
-function revelational_initialize_aos() {
-    ?>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({
-                duration: 800,
-                easing: 'ease-in-out',
-                once: true,
-                mirror: false
-            });
-        });
-    </script>
-    <?php
-}
-add_action('wp_footer', 'revelational_initialize_aos', 100);
-
 // Get daily Catholic Mass readings via RSS feed
 function revelational_get_daily_readings() {
+    include_once(ABSPATH . WPINC . '/feed.php');
+    
     // Get USCCB daily readings feed
     $rss = fetch_feed('https://bible.usccb.org/bible/readings/rss-feed');
     
