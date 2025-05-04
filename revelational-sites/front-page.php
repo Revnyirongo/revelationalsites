@@ -331,36 +331,8 @@
     </div>
 </section>
 
-<!-- Facebook Embedded Posts -->
-<section class="facebook-feed py-16">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12 relative" data-aos="fade-up">
-            <?php _e('Follow Us on Facebook', 'revelational-sites'); ?>
-            <span class="block w-24 h-1 bg-red-600 mx-auto mt-4"></span>
-        </h2>
-        
-        <div class="max-w-4xl mx-auto">
-            <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up">
-                <div id="fb-root"></div>
-                <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"></script>
-                
-                <div class="fb-page" 
-                     data-href="https://www.facebook.com/usccb" 
-                     data-tabs="timeline" 
-                     data-width="" 
-                     data-height="500" 
-                     data-small-header="false" 
-                     data-adapt-container-width="true" 
-                     data-hide-cover="false" 
-                     data-show-facepile="true">
-                    <blockquote cite="https://www.facebook.com/usccb" class="fb-xfbml-parse-ignore">
-                        <a href="https://www.facebook.com/usccb">United States Conference of Catholic Bishops</a>
-                    </blockquote>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<!-- Facebook Embedded Posts - Using Shortcode -->
+<?php echo do_shortcode('[facebook_feed page-url="https://www.facebook.com/usccb" height="500"]'); ?>
 
 <!-- Newsletter Signup -->
 <section class="newsletter-section py-16 bg-blue-700 text-white">
