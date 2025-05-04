@@ -2,7 +2,7 @@
 /**
  * Revelational Sites Theme Functions
  * 
- * Enhanced version with proper script/style enqueuing and initialization
+ * Complete version with all functionality
  */
 
 // Theme Setup
@@ -36,8 +36,12 @@ add_action('after_setup_theme', 'revelational_setup');
  * Enqueue scripts and styles with proper dependencies
  */
 function revelational_enqueue_scripts() {
-    // Enqueue Tailwind CSS - Ensure this loads first
-    wp_enqueue_style('tailwind', 'https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css', array(), '3.4.1');
+    // Enqueue Tailwind CSS - Use CDN for development, local file for production
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        wp_enqueue_style('tailwind', 'https://cdn.tailwindcss.com', array(), '3.4.1');
+    } else {
+        wp_enqueue_style('tailwind', get_template_directory_uri() . '/css/tailwind.min.css', array(), '3.4.1');
+    }
     
     // Enqueue theme's main stylesheet
     wp_enqueue_style('revelational-style', get_stylesheet_uri(), array('tailwind'), wp_get_theme()->get('Version'));
@@ -53,23 +57,8 @@ function revelational_enqueue_scripts() {
     // Enqueue jQuery (WordPress includes it by default)
     wp_enqueue_script('jquery');
     
-    // Enqueue Alpine.js for component interactions
-    wp_enqueue_script('alpine-js', 'https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js', array(), '3.13.3', true);
-    
-    // Enqueue Facebook SDK - Only if the Facebook container exists
-    wp_enqueue_script('facebook-sdk', 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0', array(), null, true);
-    
     // Enqueue theme's main JavaScript file
-    wp_enqueue_script('revelational-js', get_template_directory_uri() . '/js/main.js', array('jquery', 'swiper-js', 'aos-js', 'alpine-js'), '1.0.0', true);
-    
-    // Add a small inline script to refresh Facebook widgets when page is fully loaded
-    wp_add_inline_script('revelational-js', '
-        jQuery(window).on("load", function() {
-            if (typeof FB !== "undefined") {
-                FB.XFBML.parse();
-            }
-        });
-    ');
+    wp_enqueue_script('revelational-js', get_template_directory_uri() . '/js/main.js', array('jquery', 'swiper-js', 'aos-js'), '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'revelational_enqueue_scripts');
 
@@ -346,6 +335,69 @@ function revelational_get_daily_readings() {
     return $reading;
 }
 
+// Facebook Feed Shortcode
+function revelational_facebook_feed_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'page-url' => 'https://www.facebook.com/usccb',
+        'height' => '500',
+        'small-header' => 'false',
+        'adapt-container' => 'true',
+        'hide-cover' => 'false',
+        'show-facepile' => 'true',
+        'app-id' => '',
+    ), $atts);
+    
+    ob_start();
+    ?>
+    <div class="facebook-feed py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 relative" data-aos="fade-up">
+                <?php _e('Follow Us on Facebook', 'revelational-sites'); ?>
+                <span class="block w-24 h-1 bg-red-600 mx-auto mt-4"></span>
+            </h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up">
+                    <!-- Facebook SDK root -->
+                    <div id="fb-root"></div>
+                    
+                    <!-- Load Facebook SDK -->
+                    <script>
+                        (function(d, s, id) {
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) return;
+                            js = d.createElement(s); js.id = id;
+                            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0<?php echo $atts['app-id'] ? '&appId=' . esc_attr($atts['app-id']) : ''; ?>";
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));
+                    </script>
+                    
+                    <!-- Facebook Page Plugin -->
+                    <div class="fb-page" 
+                         data-href="<?php echo esc_attr($atts['page-url']); ?>" 
+                         data-tabs="timeline" 
+                         data-width="" 
+                         data-height="<?php echo esc_attr($atts['height']); ?>" 
+                         data-small-header="<?php echo esc_attr($atts['small-header']); ?>" 
+                         data-adapt-container-width="<?php echo esc_attr($atts['adapt-container']); ?>" 
+                         data-hide-cover="<?php echo esc_attr($atts['hide-cover']); ?>" 
+                         data-show-facepile="<?php echo esc_attr($atts['show-facepile']); ?>">
+                        
+                        <blockquote cite="<?php echo esc_attr($atts['page-url']); ?>" class="fb-xfbml-parse-ignore">
+                            <a href="<?php echo esc_attr($atts['page-url']); ?>">
+                                <?php _e('Check out our Facebook page', 'revelational-sites'); ?>
+                            </a>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('facebook_feed', 'revelational_facebook_feed_shortcode');
+
 // Shortcode for newsletter signup form
 function revelational_newsletter_shortcode($atts) {
     $atts = shortcode_atts(array(
@@ -359,8 +411,8 @@ function revelational_newsletter_shortcode($atts) {
         <h3 class="text-2xl font-bold mb-2"><?php echo esc_html($atts['title']); ?></h3>
         <p class="mb-4"><?php echo esc_html($atts['subtitle']); ?></p>
         <form action="#" method="post" class="flex flex-col md:flex-row gap-3">
-            <input type="text" name="name" placeholder="<?php _e('Your Name', 'revelational-sites'); ?>" class="px-4 py-2 rounded text-gray-800 flex-grow">
-            <input type="email" name="email" placeholder="<?php _e('Your Email', 'revelational-sites'); ?>" class="px-4 py-2 rounded text-gray-800 flex-grow" required>
+            <input type="text" name="name" placeholder="<?php _e('Your Name', 'revelational-sites'); ?>" class="px-4 py-2 rounded text-gray-800 flex-grow" autocomplete="name">
+            <input type="email" name="email" placeholder="<?php _e('Your Email', 'revelational-sites'); ?>" class="px-4 py-2 rounded text-gray-800 flex-grow" required autocomplete="email">
             <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded font-semibold transition duration-300">
                 <?php _e('Subscribe', 'revelational-sites'); ?>
             </button>
@@ -435,3 +487,42 @@ function revelational_get_bishops($count = 10) {
     
     return new WP_Query($args);
 }
+
+// Add autocomplete attributes to forms
+function revelational_add_autocomplete_to_forms() {
+    ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add autocomplete attributes to form inputs
+        var emailInputs = document.querySelectorAll('input[type="email"]');
+        var nameInputs = document.querySelectorAll('input[name*="name"]');
+        var textInputs = document.querySelectorAll('input[type="text"]');
+        
+        emailInputs.forEach(function(input) {
+            input.setAttribute('autocomplete', 'email');
+        });
+        
+        nameInputs.forEach(function(input) {
+            input.setAttribute('autocomplete', 'name');
+        });
+        
+        // Add autocomplete="off" to search fields
+        var searchInputs = document.querySelectorAll('input[type="search"]');
+        searchInputs.forEach(function(input) {
+            input.setAttribute('autocomplete', 'off');
+        });
+    });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'revelational_add_autocomplete_to_forms');
+
+// Optimize JavaScript loading
+function revelational_optimize_scripts($tag, $handle, $src) {
+    // Add defer attribute to non-critical scripts
+    if (in_array($handle, array('aos-js', 'swiper-js', 'revelational-js'))) {
+        $tag = str_replace('<script', '<script defer', $tag);
+    }
+    return $tag;
+}
+add_filter('script_loader_tag', 'revelational_optimize_scripts', 10, 3);
